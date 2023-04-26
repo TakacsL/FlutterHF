@@ -12,12 +12,24 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final dio = Dio();
 
   LoginBloc() : super(LoginForm()) {
-    on<LoginSubmitEvent>((event, emit) {
-      sendRequest(event).listen((state) {
-        emit(state);
+    on<LoginSubmitEvent>((event, emit) async {
+      debugPrint(event.toString());
+
+      emit(LoginLoading());
+
+      debugPrint("now sending post to /login");
+      try {
+        final token = await dio.post('https://www.randomuri.com/login', data: {'email': event.props[0], 'password': event.props[1]});
+
+        emit(LoginSuccess());
+        if (event.props[2] == true) debugPrint("Itt kéne elmenteni a SaredPreferencesbe a tokent");
+      } catch (error) {
+        debugPrint(error.toString());
+        emit(LoginError(error.toString()));
+      }
       });
-    });
-  }
+    }
+
 
 
 
