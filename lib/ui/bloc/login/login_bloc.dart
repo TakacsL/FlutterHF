@@ -1,15 +1,16 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
-
+import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 part 'login_event.dart';
 part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  final dio = Dio();
 
   LoginBloc() : super(LoginForm()) {
     on<LoginSubmitEvent>((event, emit) async {
@@ -18,11 +19,18 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       emit(LoginLoading());
 
       debugPrint("now sending post to /login");
+      var jsonToString;
       try {
-        final token = await dio.post('https://www.randomuri.com/login', data: {'email': event.props[0], 'password': event.props[1]});
-
+        final token = await GetIt.I<Dio>().post(
+          '/login',
+          data: {
+            'email': event.props[0],
+            'password': event.props[1],
+          },
+        );
+        jsonToString = jsonDecode(token.toString());
         emit(LoginSuccess());
-        if (event.props[2] == true) debugPrint("Itt kéne elmenteni a SaredPreferencesbe a tokent");
+        if (event.props[2] == true) GetIt.I<SharedPreferences>().setString('token', jsonToString['token']);
       } catch (error) {
         debugPrint(error.toString());
         emit(LoginError(error.toString()));
@@ -30,45 +38,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       });
     }
 
-
-
-
-
   LoginState get initialState => LoginForm();
 
-  @override
-  Stream<LoginState> mapEventToState(LoginState currentState, LoginEvent event,) async* {
-    debugPrint(currentState.toString());
-    if (currentState is LoginForm) {
-      yield LoginLoading();
-
-      debugPrint("now sending post to /login");
-      try {
-        final token = await dio.post('/login', data: {'email': event.props[0], 'password': event.props[1]});
-
-        yield LoginSuccess();
-        if (event.props[2] == true) debugPrint("Itt kéne elmenteni a SaredPreferencesbe a tokent");
-      } catch (error) {
-        debugPrint(error.toString());
-        yield LoginError(error.toString());
-      }
-    }
-  }
-
-  Stream<LoginState> sendRequest(LoginEvent event) async* {
-    debugPrint(event.toString());
-
-    yield LoginLoading();
-
-    debugPrint("now sending post to /login");
-    try {
-      final token = await dio.post('/login', data: {'email': event.props[0], 'password': event.props[1]});
-
-      yield LoginSuccess();
-      if (event.props[2] == true) debugPrint("Itt kéne elmenteni a SaredPreferencesbe a tokent");
-    } catch (error) {
-      debugPrint(error.toString());
-      yield LoginError(error.toString());
-    }
-  }
 }

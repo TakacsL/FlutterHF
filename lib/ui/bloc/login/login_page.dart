@@ -10,7 +10,6 @@ class LoginPageBloc extends StatefulWidget {
 }
 
 class _LoginPageBlocState extends State<LoginPageBloc> {
-  final LoginBloc _loginBloc = LoginBloc();
   final _formKey = GlobalKey<FormState>();
   final fnevController = TextEditingController();
   final jelszoController = TextEditingController();
@@ -24,17 +23,6 @@ class _LoginPageBlocState extends State<LoginPageBloc> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LoginBloc, LoginState>(
-        bloc: _loginBloc,
-        builder: (BuildContext context,
-            LoginState state,) {
-          /*if (state is LoginForm) {
-            const snackBar = SnackBar(
-                content: Text('Not logged in')
-            );
-
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          }*/
           return Scaffold(
             appBar: AppBar(
               title: const Text("Flutter HF title"),
@@ -124,11 +112,12 @@ class _LoginPageBlocState extends State<LoginPageBloc> {
                                   const SnackBar(
                                       content: Text('Processing Data')),
                                 );
-                                debugPrint('FNev is :${fnevController.text}');
-                                debugPrint(
-                                    'Jelszó is :${jelszoController.text}');
-                                if (_loginBloc.state is LoginForm) {
-                                  _loginBloc.add(LoginSubmitEvent(fnevController.text, jelszoController.text, rememberMe));
+                                debugPrint('FNev is :${fnevController.text}');                    //login@gmail.com
+                                debugPrint('Jelszó is :${jelszoController.text}');                //password
+                                if (BlocProvider.of<LoginBloc>(context).state is! LoginForm) debugPrint(BlocProvider.of<LoginBloc>(context).state.toString());
+                                if (BlocProvider.of<LoginBloc>(context).state is LoginForm) {
+                                  debugPrint("State is LoginForm adding LoginSubmitEvent");
+                                  BlocProvider.of<LoginBloc>(context).add(LoginSubmitEvent(fnevController.text, jelszoController.text, rememberMe));
                                 }
                               }
                             },
@@ -142,7 +131,7 @@ class _LoginPageBlocState extends State<LoginPageBloc> {
               ),
             ),
           );
-        });
+
   }
 
   @override
