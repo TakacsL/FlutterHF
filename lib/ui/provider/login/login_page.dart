@@ -30,10 +30,8 @@ class _LoginPageProviderState extends State<LoginPageProvider> {
 
   //TODO: Try auto-login on model
   void _initializePage() async {
-    debugPrint("!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-    debugPrint(GetIt.I<SharedPreferences>().getString("token"));
+    debugPrint('AutoLogin fired, token is : ${GetIt.I<SharedPreferences>().getString("token") ?? 'null'}');
       if (GetIt.I<SharedPreferences>().getString("token") != null) {
-        //autologin supposed to fire now
         BlocProvider.of<LoginBloc>(context).add(LoginAutoLoginEvent());
       }
   }
@@ -57,12 +55,10 @@ class _LoginPageProviderState extends State<LoginPageProvider> {
       },
       child: const LoginPageBloc(),
     );
-    //return const LoginPageBloc();
   }
 
   @override
   void dispose() {
-    GetIt.I<SharedPreferences>().remove("token");       //remember me token törlés
     super.dispose();
   }
 }

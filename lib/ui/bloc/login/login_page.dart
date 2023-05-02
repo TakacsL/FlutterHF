@@ -113,10 +113,10 @@ class _LoginPageBlocState extends State<LoginPageBloc> {
                                 debugPrint(BlocProvider.of<LoginBloc>(context).state.toString());
                                 if (BlocProvider.of<LoginBloc>(context).state is! LoginLoading) {
                                   debugPrint("State is LoginForm adding LoginSubmitEvent");
-                                  ScaffoldMessenger.of(context).showSnackBar(
+                                  /*ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                         content: Text('Processing Data')),
-                                  );
+                                  );*/
                                   BlocProvider.of<LoginBloc>(context).add(LoginSubmitEvent(fnevController.text, jelszoController.text, rememberMe));
                                 }
                               }

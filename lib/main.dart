@@ -3,9 +3,11 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_homework/network/data_source_interceptor.dart';
+import 'package:flutter_homework/ui/bloc/list/list_bloc.dart';
 import 'package:flutter_homework/ui/bloc/list/list_page.dart';
 import 'package:flutter_homework/ui/bloc/login/login_bloc.dart';
 import 'package:flutter_homework/ui/bloc/login/login_page.dart';
+import 'package:flutter_homework/ui/provider/list/list_page.dart';
 import 'package:flutter_homework/ui/provider/login/login_page.dart';
 import 'package:get_it/get_it.dart';
 import 'package:loader_overlay/loader_overlay.dart';
@@ -51,7 +53,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Flutter Demo',
         routes: {         //nem kell a LoginPageBloc() '/'-ként routenak, mert home-ban van megadva leljebb
-          '/list': (context) => const ListPageBloc(),
+          '/list': (context) => LoaderOverlay(child: BlocProvider(create: (context) => ListBloc(), child: const ListPageProvider(),))
         },
         theme: ThemeData(
           primarySwatch: Colors.red,
