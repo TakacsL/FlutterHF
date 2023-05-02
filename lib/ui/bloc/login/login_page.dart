@@ -108,15 +108,15 @@ class _LoginPageBlocState extends State<LoginPageBloc> {
                           child: ElevatedButton(
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text('Processing Data')),
-                                );
                                 debugPrint('FNev is :${fnevController.text}');                    //login@gmail.com
                                 debugPrint('Jelszó is :${jelszoController.text}');                //password
-                                if (BlocProvider.of<LoginBloc>(context).state is! LoginForm) debugPrint(BlocProvider.of<LoginBloc>(context).state.toString());
-                                if (BlocProvider.of<LoginBloc>(context).state is LoginForm) {
+                                debugPrint(BlocProvider.of<LoginBloc>(context).state.toString());
+                                if (BlocProvider.of<LoginBloc>(context).state is! LoginLoading) {
                                   debugPrint("State is LoginForm adding LoginSubmitEvent");
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text('Processing Data')),
+                                  );
                                   BlocProvider.of<LoginBloc>(context).add(LoginSubmitEvent(fnevController.text, jelszoController.text, rememberMe));
                                 }
                               }

@@ -35,7 +35,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         debugPrint(error.toString());
         emit(LoginError(error.toString()));
       }
+      emit(LoginForm());
       });
+    on<LoginAutoLoginEvent>((event, emit) {
+      emit(LoginSuccess());
+      emit(LoginForm());
+    });
     }
 
   LoginState get initialState => LoginForm();

@@ -2,8 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_homework/ui/bloc/list/list_page.dart';
 import 'package:flutter_homework/ui/bloc/login/login_page.dart';
+import 'package:get_it/get_it.dart';
 import 'package:loader_overlay/loader_overlay.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../bloc/login/login_bloc.dart';
 
@@ -27,16 +30,30 @@ class _LoginPageProviderState extends State<LoginPageProvider> {
 
   //TODO: Try auto-login on model
   void _initializePage() async {
-
+    debugPrint("!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    debugPrint(GetIt.I<SharedPreferences>().getString("token"));
+      if (GetIt.I<SharedPreferences>().getString("token") != null) {
+        //autologin supposed to fire now
+        BlocProvider.of<LoginBloc>(context).add(LoginAutoLoginEvent());
+      }
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
-          if (state is LoginSuccess) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.toString())));
+          if (state is LoginSuccess) {
+            Navigator.pushReplacementNamed(context, '/list');
+          }
           if (state is LoginLoading) context.loaderOverlay.show();
           else context.loaderOverlay.hide();
+          if (state is LoginError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                  content: Text(state.props[0] as String)),
+            );
+            Navigator.pushReplacementNamed(context, 'home');
+          }
       },
       child: const LoginPageBloc(),
     );
@@ -45,6 +62,7 @@ class _LoginPageProviderState extends State<LoginPageProvider> {
 
   @override
   void dispose() {
+    GetIt.I<SharedPreferences>().remove("token");       //remember me token törlés
     super.dispose();
   }
 }

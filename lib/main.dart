@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_homework/network/data_source_interceptor.dart';
+import 'package:flutter_homework/ui/bloc/list/list_page.dart';
 import 'package:flutter_homework/ui/bloc/login/login_bloc.dart';
 import 'package:flutter_homework/ui/bloc/login/login_page.dart';
 import 'package:flutter_homework/ui/provider/login/login_page.dart';
@@ -49,6 +50,9 @@ class MyApp extends StatelessWidget {
       create: (context) => LoginBloc(),
       child: MaterialApp(
         title: 'Flutter Demo',
+        routes: {         //nem kell a LoginPageBloc() '/'-ként routenak, mert home-ban van megadva leljebb
+          '/list': (context) => const ListPageBloc(),
+        },
         theme: ThemeData(
           primarySwatch: Colors.red,
         ),
