@@ -16,13 +16,13 @@ class _ListPageProviderState extends State<ListPageProvider> {
   @override
   void initState() {
     super.initState();
+    debugPrint("Provider initState");
     SchedulerBinding.instance.addPostFrameCallback((_) => _initializePage());
   }
 
   //TODO: Fetch user list from model
   void _initializePage() async {
-    debugPrint('initilizePage call happened, addnig ListLoadEvent to queue');
-    BlocProvider.of<ListBloc>(context).add(ListLoadEvent());
+    debugPrint("Provider Initialitze Page");
   }
 
   @override
@@ -30,13 +30,16 @@ class _ListPageProviderState extends State<ListPageProvider> {
     return BlocListener<ListBloc, ListState>(
       listener: (context, state) {
         if (state is ListLoading) context.loaderOverlay.show();
-        if (state is ListLoaded) context.loaderOverlay.hide();
-        if (state is ListError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                content: Text(state.props[0] as String)),
-          );
+        if (state is ListLoaded) {
+          debugPrint("ListLoaded caught");
+          context.loaderOverlay.hide();
         }
+          if (state is ListError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                  content: Text(state.props[0] as String)),
+            );
+          }
       },
       child: const ListPageBloc(),
     );
