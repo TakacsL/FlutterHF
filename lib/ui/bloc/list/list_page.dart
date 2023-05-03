@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_homework/network/user_item.dart';
@@ -21,19 +19,10 @@ class _ListPageBlocState extends State<ListPageBloc> {
   @override
   void initState() {
     super.initState();
-    debugPrint("Page initState");
     BlocProvider.of<ListBloc>(context).add(ListLoadEvent());
-    debugPrint("Page initstate done");
-  }
-
-  void refreshList() {
-    debugPrint("refreshing list, and redrawing");
-    //getList().then((value) => myListView = value);
-    setState(() {});
   }
 
   Widget getList() {
-    debugPrint("Page getList");
     List<Widget> list = <Widget>[];
     if (BlocProvider.of<ListBloc>(context).state is ListLoaded){
       var it = (BlocProvider.of<ListBloc>(context).state as ListLoaded).props.iterator;
@@ -58,7 +47,6 @@ class _ListPageBlocState extends State<ListPageBloc> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("Page build");
     return BlocBuilder<ListBloc, ListState> (
         builder: (context, state) {
           if (state is ListLoaded) return loaded();
@@ -70,10 +58,9 @@ class _ListPageBlocState extends State<ListPageBloc> {
   Widget loadingStill() => const Center(child: CircularProgressIndicator(),);
 
   Widget  loaded() {
-    debugPrint("Page build");
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My App'),
+        title: const Text('Flutter HF'),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
@@ -81,6 +68,7 @@ class _ListPageBlocState extends State<ListPageBloc> {
               debugPrint("Logg me out pls"); //TODO logout
               Navigator.pushReplacementNamed(context, '/');
               GetIt.I<SharedPreferences>().remove('token');
+              GetIt.I<SharedPreferences>().remove('one-time-token');
               debugPrint("Sharedpreferences getString('token') should be null, it is ${GetIt.I<SharedPreferences>().getString('token') ?? 'null'}");
             },
           ),

@@ -1,6 +1,4 @@
-import 'dart:async';
 import 'dart:convert';
-
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
@@ -31,6 +29,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         jsonToString = jsonDecode(token.toString());
         emit(LoginSuccess());
         if (event.props[2] == true) GetIt.I<SharedPreferences>().setString('token', jsonToString['token']);
+        GetIt.I<SharedPreferences>().setString('one-time-token', jsonToString['token']);
       } catch (error) {
         debugPrint(error.toString());
         emit(LoginError(error.toString()));

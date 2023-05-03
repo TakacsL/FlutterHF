@@ -1,12 +1,9 @@
-import 'dart:convert';
-
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_homework/network/user_item.dart';
 import 'package:get_it/get_it.dart';
-import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 part 'list_event.dart';
@@ -19,7 +16,7 @@ class ListBloc extends Bloc<ListEvent, ListState> {
         debugPrint('Starting to fetch list data');
         emit(ListLoading());
         Map<String, dynamic> headers = {
-          'Authorization': 'Bearer ${GetIt.I<SharedPreferences>().getString('token') ?? 'null'}',        //TODO megkeresni a login tokent akkor is, ha nincs remember me
+          'Authorization': 'Bearer ${GetIt.I<SharedPreferences>().getString('one-time-token') ?? 'null'}',
         };
         final response = await GetIt.I<Dio>().get('/users', options : Options(
           headers: headers,

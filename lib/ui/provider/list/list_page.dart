@@ -3,7 +3,9 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_homework/ui/bloc/list/list_bloc.dart';
 import 'package:flutter_homework/ui/bloc/list/list_page.dart';
+import 'package:get_it/get_it.dart';
 import 'package:loader_overlay/loader_overlay.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ListPageProvider extends StatefulWidget {
   const ListPageProvider({Key? key}) : super(key: key);
@@ -43,5 +45,11 @@ class _ListPageProviderState extends State<ListPageProvider> {
       },
       child: const ListPageBloc(),
     );
+  }
+
+  @override
+  void dispose() {
+    GetIt.I<SharedPreferences>().remove('one-time-token');
+    super.dispose();
   }
 }
