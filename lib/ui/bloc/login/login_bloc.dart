@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:js';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
@@ -14,6 +13,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   LoginBloc() : super(LoginForm()) {
     on<LoginSubmitEvent>((event, emit) async {
+      if (state is LoginLoading) return;
       debugPrint(event.toString());
 
       emit(LoginLoading());
@@ -33,8 +33,15 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         if (event.props[2] == true) GetIt.I<SharedPreferences>().setString('token', jsonToString['token']);
         GetIt.I<SharedPreferences>().setString('one-time-token', jsonToString['token']);
       } catch (error) {
-        debugPrint(error.toString());
-        emit(LoginError(error.toString()));
+        if (error is DioError){
+          Map responseData = error.response?.data;
+          debugPrint(responseData['message']);
+          emit(LoginError(responseData['message']));
+        }
+        else {
+          debugPrint(error.toString());
+          emit(LoginError(error.toString()));
+        }
       }
       emit(LoginForm());
       });
