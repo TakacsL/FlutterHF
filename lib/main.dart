@@ -53,12 +53,13 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Flutter Demo',
         routes: {         //nem kell a LoginPageBloc() '/'-ként routenak, mert home-ban van megadva leljebb
+          //'/': (context) => LoaderOverlay(child: BlocProvider(create: (context) => LoginBloc(), child: const LoginPageProvider(),)),
           '/list': (context) => LoaderOverlay(child: BlocProvider(create: (context) => ListBloc(), child: const ListPageProvider(),))
         },
         theme: ThemeData(
           primarySwatch: Colors.red,
         ),
-        home: const LoaderOverlay(child: LoginPageProvider(loginbloc:LoginPageBloc()),),
+        home: const LoaderOverlay(child: LoginPageProvider(),),
 
         //DO NOT MODIFY
         navigatorObservers: GetIt.I<List<NavigatorObserver>>(),
@@ -66,8 +67,6 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
       ),
     );
-
-
   }
 }
 

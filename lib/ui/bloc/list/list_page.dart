@@ -14,7 +14,7 @@ class ListPageBloc extends StatefulWidget {
 
 class _ListPageBlocState extends State<ListPageBloc> {
 
-  late Future<Widget> myListView;
+  //late Future<Widget> myListView;
 
   @override
   void initState() {
@@ -65,7 +65,6 @@ class _ListPageBlocState extends State<ListPageBloc> {
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () {
-              debugPrint("Logg me out pls"); //TODO logout
               Navigator.pushReplacementNamed(context, '/');
               GetIt.I<SharedPreferences>().remove('token');
               GetIt.I<SharedPreferences>().remove('one-time-token');

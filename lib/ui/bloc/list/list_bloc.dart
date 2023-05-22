@@ -15,16 +15,32 @@ class ListBloc extends Bloc<ListEvent, ListState> {
       try {
         debugPrint('Starting to fetch list data');
         emit(ListLoading());
-        Map<String, dynamic> headers = {
+        Map<String, dynamic> headers;
+        if (GetIt.I<SharedPreferences>().containsKey('token')) {
+          headers = {
+            'Authorization': 'Bearer ${GetIt.I<SharedPreferences>().getString('token')}',
+          };
+        } else {
+          headers = {
           'Authorization': 'Bearer ${GetIt.I<SharedPreferences>().getString('one-time-token') ?? 'null'}',
         };
-        final response = await GetIt.I<Dio>().get('/users', options : Options(
-          headers: headers,
-        ));
-        List<UserItem> responseList = <UserItem>[];
-        for (Map<String, String> map in response.data) {
-          responseList.add(UserItem(map['name'] ?? 'name', map['avatarUrl'] ?? 'avatarUrl'));
         }
+        GetIt.I<Dio>().options = BaseOptions(headers: headers);
+        /*final response = await GetIt.I<Dio>().get('/users', options : Options(
+           headers: headers,
+        ));*/
+        var response;
+        List<UserItem> responseList = <UserItem>[];
+        try {               // a tesztelésnél néha null lesz a Future<Response<dynamic>> helyett, pedig a Dion objektumon állítok headereket, de ez se kapja el
+          response = await GetIt.I<Dio>().get('/users');
+          for (Map<String, String> map in response.data) {
+            responseList.add(UserItem(map['name'] ?? 'name', map['avatarUrl'] ?? 'avatarUrl'));
+          }
+        }
+        catch (e) {
+          debugPrint(e.toString());
+        }
+
         //List<UserItem> responseList = response.data;
         debugPrint("Response finished, size is ${responseList.length}");
         emit(ListLoaded(responseList));

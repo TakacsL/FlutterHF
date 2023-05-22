@@ -12,9 +12,9 @@ import '../../bloc/login/login_bloc.dart';
 
 class LoginPageProvider extends StatefulWidget {
 
-  final LoginPageBloc loginbloc;
+  final LoginPageBloc loginbloc = const LoginPageBloc();
 
-  const LoginPageProvider({super.key, required this.loginbloc});
+  const LoginPageProvider({super.key});
 
   @override
   State<LoginPageProvider> createState() => _LoginPageProviderState();
@@ -31,9 +31,7 @@ class _LoginPageProviderState extends State<LoginPageProvider> {
   //TODO: Try auto-login on model
   void _initializePage() async {
     debugPrint('AutoLogin fired, token is : ${GetIt.I<SharedPreferences>().getString("token") ?? 'null'}');
-      if (GetIt.I<SharedPreferences>().getString("token") != null) {
-        BlocProvider.of<LoginBloc>(context).add(LoginAutoLoginEvent());
-      }
+    BlocProvider.of<LoginBloc>(context).add(LoginAutoLoginEvent());
   }
 
   @override
@@ -50,7 +48,7 @@ class _LoginPageProviderState extends State<LoginPageProvider> {
               SnackBar(
                   content: Text(state.props[0] as String)),
             );
-            Navigator.pushReplacementNamed(context, 'home');
+            Navigator.pushReplacementNamed(context, '/');
           }
       },
       child: const LoginPageBloc(),

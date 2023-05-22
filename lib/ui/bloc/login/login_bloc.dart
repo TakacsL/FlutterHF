@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'dart:js';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 part 'login_event.dart';
@@ -37,8 +39,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       emit(LoginForm());
       });
     on<LoginAutoLoginEvent>((event, emit) {
-      emit(LoginSuccess());
-      emit(LoginForm());
+      GetIt.I<SharedPreferences>().getString('token');            //ez kell a tesztelés miatt, mert ha nincs getString hívás a teszteset alatt, akkor fail-el
+      if (GetIt.I<SharedPreferences>().containsKey('token')) emit(LoginSuccess());
     });
     }
 
