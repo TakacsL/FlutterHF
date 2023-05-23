@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -49,6 +50,7 @@ class _ListPageProviderState extends State<ListPageProvider> {
 
   @override
   void dispose() {
+    GetIt.I<Dio>().options = BaseOptions();
     GetIt.I<SharedPreferences>().remove('one-time-token');
     super.dispose();
   }

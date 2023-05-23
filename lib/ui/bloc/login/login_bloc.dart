@@ -31,7 +31,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         jsonToString = jsonDecode(token.toString());
         emit(LoginSuccess());
         if (event.props[2] == true) GetIt.I<SharedPreferences>().setString('token', jsonToString['token']);
-        GetIt.I<SharedPreferences>().setString('one-time-token', jsonToString['token']);
+        Map<String, dynamic> headers = {
+          'Authorization': 'Bearer ${jsonToString['token']}',
+        };
+        GetIt.I<Dio>().options = BaseOptions(headers: headers);
+        //GetIt.I<SharedPreferences>().setString('one-time-token', jsonToString['token']);
       } catch (error) {
         if (error is DioError){
           Map responseData = error.response?.data;
@@ -46,8 +50,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       emit(LoginForm());
       });
     on<LoginAutoLoginEvent>((event, emit) {
-      GetIt.I<SharedPreferences>().getString('token');            //ez kell a tesztelés miatt, mert ha nincs getString hívás a teszteset alatt, akkor fail-el
-      if (GetIt.I<SharedPreferences>().containsKey('token')) emit(LoginSuccess());
+      if (GetIt.I<SharedPreferences>().containsKey('token')) {
+        Map<String, dynamic> headers = {
+          'Authorization': 'Bearer ${GetIt.I<SharedPreferences>().getString('token')}',
+        };
+        GetIt.I<Dio>().options = BaseOptions(headers: headers);
+        emit(LoginSuccess());
+      }
     });
     }
 

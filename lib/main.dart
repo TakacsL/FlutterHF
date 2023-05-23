@@ -7,8 +7,6 @@ import 'package:flutter_homework/ui/bloc/list/list_bloc.dart';
 import 'package:flutter_homework/ui/bloc/list/list_page.dart';
 import 'package:flutter_homework/ui/bloc/login/login_bloc.dart';
 import 'package:flutter_homework/ui/bloc/login/login_page.dart';
-import 'package:flutter_homework/ui/provider/list/list_page.dart';
-import 'package:flutter_homework/ui/provider/login/login_page.dart';
 import 'package:get_it/get_it.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
@@ -54,12 +52,12 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Demo',
         routes: {         //nem kell a LoginPageBloc() '/'-ként routenak, mert home-ban van megadva leljebb
           //'/': (context) => LoaderOverlay(child: BlocProvider(create: (context) => LoginBloc(), child: const LoginPageProvider(),)),
-          '/list': (context) => LoaderOverlay(child: BlocProvider(create: (context) => ListBloc(), child: const ListPageProvider(),))
+          '/list': (context) => LoaderOverlay(child: BlocProvider(create: (context) => ListBloc(), child: const ListPageBloc(),))
         },
         theme: ThemeData(
           primarySwatch: Colors.red,
         ),
-        home: const LoaderOverlay(child: LoginPageProvider(),),
+        home: const LoaderOverlay(child: LoginPageBloc(),),
 
         //DO NOT MODIFY
         navigatorObservers: GetIt.I<List<NavigatorObserver>>(),
